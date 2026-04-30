@@ -1,0 +1,47 @@
+{
+  "name": "codex-statusline",
+  "version": "0.1.0",
+  "description": "Status companion for OpenAI Codex CLI: hooks, renderer, installer, and project-aware session state.",
+  "license": "MIT",
+  "author": {
+    "name": "Saschane"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saschane/codex-statusline.git"
+  },
+  "homepage": "https://github.com/saschane/codex-statusline#readme",
+  "bugs": {
+    "url": "https://github.com/saschane/codex-statusline/issues"
+  },
+  "keywords": [
+    "codex",
+    "codex-cli",
+    "openai",
+    "statusline",
+    "hooks",
+    "terminal",
+    "tui"
+  ],
+  "bin": {
+    "codex-statusline": "bin/codex-statusline.cjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "hooks/",
+    ".codex-plugin/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "prepublishOnly": "npm test",
+    "test": "node --test",
+    "doctor": "node bin/codex-statusline.cjs doctor",
+    "render": "node bin/codex-statusline.cjs render",
+    "install:local": "node bin/codex-statusline.cjs install --local-dev"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
