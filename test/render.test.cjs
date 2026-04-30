@@ -53,3 +53,39 @@ test('renderLine omits session segment when sessionId is absent', () => {
 
   assert.doesNotMatch(line, /session /);
 });
+
+test('renderLine omits ctx segment when no context data is available', () => {
+  const line = renderLine({
+    model: 'gpt-4o',
+    cwd: '/home/example/project',
+    config: {},
+    git: { branch: 'main', dirty: false },
+    context: {}
+  }, { plain: true });
+
+  assert.doesNotMatch(line, /ctx /);
+});
+
+test('renderLine omits sandbox/approval segment when neither is configured', () => {
+  const line = renderLine({
+    model: 'gpt-4o',
+    cwd: '/home/example/project',
+    config: {},
+    git: { branch: 'main', dirty: false },
+    context: {}
+  }, { plain: true });
+
+  assert.doesNotMatch(line, /sandbox\?|approval\?/);
+});
+
+test('renderLine shows policy segment when only sandboxMode is set', () => {
+  const line = renderLine({
+    model: 'gpt-4o',
+    cwd: '/home/example/project',
+    config: { sandboxMode: 'workspace-write' },
+    git: { branch: 'main', dirty: false },
+    context: {}
+  }, { plain: true });
+
+  assert.match(line, /workspace-write\/?/);
+});

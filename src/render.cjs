@@ -36,8 +36,9 @@ function renderLine(state, { plain = false } = {}) {
     ? `${state.git.branch}${state.git.dirty ? `*${state.git.changedFiles ? state.git.changedFiles : ''}` : ''}`
     : 'no-git';
   const ctx = formatContext(state.context || {});
-  const sandbox = cfg.sandboxMode || 'sandbox?';
-  const approval = cfg.approvalPolicy || 'approval?';
+  const sandbox = cfg.sandboxMode || '';
+  const approval = cfg.approvalPolicy || '';
+  const policy = sandbox || approval ? `${sandbox || '?'}/${approval || '?'}` : null;
   const session = state.sessionId
     ? `session ${state.sessionId.slice(0, 8)}`
     : null;
@@ -46,8 +47,8 @@ function renderLine(state, { plain = false } = {}) {
     color(`Codex ${model}${effort}`, '36', plain),
     color(dir, '2', plain),
     color(git, state.git?.dirty ? '33' : '32', plain),
-    color(ctx, '35', plain),
-    color(`${sandbox}/${approval}`, '90', plain),
+    ctx ? color(ctx, '35', plain) : null,
+    policy ? color(policy, '90', plain) : null,
     session ? color(session, '90', plain) : null
   ];
 
@@ -58,7 +59,7 @@ function formatContext(context) {
   if (typeof context.percent === 'number') return `ctx ${context.percent}%`;
   if (context.usedTokens) return `ctx ${compact(context.usedTokens)} tok`;
   if (context.approxTokensFromTranscript) return `ctx ~${compact(context.approxTokensFromTranscript)} tok`;
-  return 'ctx unknown';
+  return null;
 }
 
 function compact(value) {
