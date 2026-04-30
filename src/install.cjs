@@ -6,7 +6,7 @@ const { configPath, hooksPath, installDir, packageRoot } = require('./paths.cjs'
 const { backupFile, ensureDir, fileExists, readJson, writeJsonAtomic } = require('./util.cjs');
 const { ensureCodexHooksEnabled, ensureTuiStatusLine } = require('./config.cjs');
 
-const HOOK_TIMEOUT_S = 5;
+const HOOK_TIMEOUT_S = 10;
 
 function computeLineDiff(before, after) {
   const beforeLines = (before || '').split('\n').filter((l) => l.length > 0);
@@ -150,4 +150,4 @@ function addHook(data, eventName, matcher, script) {
   data.hooks[eventName] = filtered;
 }
 
-module.exports = { install };
+module.exports = { copyRuntimeFiles, install };
