@@ -1,8 +1,17 @@
 'use strict';
 
+const path = require('node:path');
+const { installDir } = require('./paths.cjs');
+const { fileExists } = require('./util.cjs');
+
 async function tmuxConfig({ args = [] } = {}) {
-  console.error('tmux-config: not yet implemented');
-  process.exitCode = 1;
+  if (!fileExists(installDir())) {
+    console.error("Not installed — run 'npx codex-statusline install' first");
+    process.exitCode = 1;
+    return;
+  }
+  const renderCmd = path.join(installDir(), 'bin', 'codex-statusline.cjs');
+  console.log(`set-option -g status-right "#(node ${renderCmd} render --plain)"`);
 }
 
 module.exports = { tmuxConfig };
