@@ -66,3 +66,20 @@ test('CORE-04: ensureTuiStatusLine does not duplicate status_line set via [tui] 
   const count = (result.match(/status_line\s*=/g) || []).length;
   assert.strictEqual(count, 1, 'status_line must appear exactly once when set via [tui] section');
 });
+
+test('CORE-04: ensureTuiStatusLine inserts before [tui.*] section to avoid dotted-key collision', () => {
+  const withSubTable = '[features]\ncodex_hooks = true\n\n[tui.model_availability_nux]\n"gpt-5.5" = 4\n';
+  const result = ensureTuiStatusLine(withSubTable);
+  const insertIdx = result.indexOf('tui.status_line =');
+  const subTableIdx = result.indexOf('[tui.model_availability_nux]');
+  assert.ok(insertIdx >= 0, 'tui.status_line must be present');
+  assert.ok(insertIdx < subTableIdx, 'tui.status_line must come before [tui.model_availability_nux] to avoid being parsed as a child key');
+});
+
+test('CORE-04: ensureTuiStatusLine inserts before any section header in mixed config', () => {
+  const mixedConfig = 'model = "gpt-5"\n\n[features]\ncodex_hooks = true\n';
+  const result = ensureTuiStatusLine(mixedConfig);
+  const insertIdx = result.indexOf('tui.status_line =');
+  const featuresIdx = result.indexOf('[features]');
+  assert.ok(insertIdx < featuresIdx, 'tui.status_line must come before [features] section');
+});

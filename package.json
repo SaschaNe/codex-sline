@@ -1,6 +1,6 @@
 {
   "name": "codex-sline",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Status companion for OpenAI Codex CLI: hooks, renderer, installer, and project-aware session state.",
   "license": "MIT",
   "author": {

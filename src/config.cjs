@@ -85,7 +85,7 @@ function ensureCodexHooksEnabled(text) {
 }
 
 function ensureTuiStatusLine(text) {
-  const desired = 'tui.status_line = ["model-with-reasoning", "context-used", "context-remaining", "five-hour-limit", "weekly-limit", "current-dir"]';
+  const items = '["model-with-reasoning", "context-used", "context-remaining", "five-hour-limit", "weekly-limit", "current-dir"]';
   const normalized = text.replace(/\r\n/g, '\n');
   const lines = normalized.split('\n');
   let inTuiSection = false;
@@ -99,10 +99,16 @@ function ensureTuiStatusLine(text) {
     return false;
   });
   if (hasStatusLine) return normalized;
-  const prefix = normalized.endsWith('\n') || normalized.length === 0
-    ? normalized
-    : `${normalized}\n`;
-  return `${prefix}${desired}\n`;
+
+  const firstSectionIdx = lines.findIndex((l) => /^\[.+\]/.test(l.trim()));
+  if (firstSectionIdx === -1) {
+    const prefix = normalized.endsWith('\n') || normalized.length === 0
+      ? normalized
+      : `${normalized}\n`;
+    return `${prefix}tui.status_line = ${items}\n`;
+  }
+  lines.splice(firstSectionIdx, 0, `tui.status_line = ${items}`, '');
+  return lines.join('\n');
 }
 
 function matchTuiStatusLine(text) {
