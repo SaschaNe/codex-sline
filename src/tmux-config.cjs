@@ -11,7 +11,7 @@ async function tmuxConfig({ args = [] } = {}) {
     return;
   }
   const renderCmd = path.join(installDir(), 'bin', 'codex-statusline.cjs');
-  console.log(`set-option -g status-right "#(node ${renderCmd} render --plain)"`);
+  console.log(`set-option -g status-right "#(node '${renderCmd}' render --plain)"`);
 }
 
 module.exports = { tmuxConfig };
