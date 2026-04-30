@@ -37,16 +37,19 @@ function captureConsole() {
   };
 }
 
-function loadUpgradeWithMocks({ latestVersion, registryError = null, copyRuntimeFiles = () => {} } = {}) {
+function loadUpgradeWithMocks({ latestVersion, registryError = null, copyRuntimeFiles } = {}) {
   const origExecFileSync = childProcess.execFileSync;
   const installModule = require(installPath);
   const origCopyRuntimeFiles = installModule.copyRuntimeFiles;
+  const shouldMockCopy = typeof copyRuntimeFiles === 'function';
 
   childProcess.execFileSync = () => {
     if (registryError) throw registryError;
     return `${latestVersion}\n`;
   };
-  installModule.copyRuntimeFiles = copyRuntimeFiles;
+  if (shouldMockCopy) {
+    installModule.copyRuntimeFiles = copyRuntimeFiles;
+  }
   delete require.cache[upgradePath];
 
   const { upgrade } = require(upgradePath);
@@ -119,6 +122,28 @@ test('upgrade: copies runtime files and prints progress when newer version exist
       assert.ok(output.logs.includes('Latest:    1.1.0'));
       assert.ok(output.logs.includes('Downloading... done'));
       assert.ok(output.logs.includes(`Install dir: ${iDir}`));
+      assert.ok(output.logs.includes('Upgrade complete.'));
+    } finally {
+      process.exitCode = prev;
+      mocked.restore();
+      output.restore();
+    }
+  });
+});
+
+test('upgrade: replaces an existing non-empty install dir with real runtime files', async () => {
+  await withTempCodexHome(async (tmpDir) => {
+    const iDir = seedInstalledPackage(tmpDir, '1.0.0');
+    fs.writeFileSync(path.join(iDir, 'stale.txt'), 'stale');
+    const prev = process.exitCode;
+    const output = captureConsole();
+    const mocked = loadUpgradeWithMocks({ latestVersion: '1.1.0' });
+    process.exitCode = undefined;
+    try {
+      await mocked.upgrade({ args: [] });
+      assert.strictEqual(process.exitCode, undefined);
+      assert.strictEqual(fs.existsSync(path.join(iDir, 'stale.txt')), false);
+      assert.strictEqual(fs.existsSync(path.join(iDir, 'bin', 'codex-statusline.cjs')), true);
       assert.ok(output.logs.includes('Upgrade complete.'));
     } finally {
       process.exitCode = prev;

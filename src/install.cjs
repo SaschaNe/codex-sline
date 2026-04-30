@@ -82,7 +82,10 @@ async function install({ args = [] } = {}) {
 
 function copyRuntimeFiles(sourceRoot, target, { localDev }) {
   const newTarget = `${target}.new`;
+  const oldTarget = `${target}.old`;
   fs.rmSync(newTarget, { recursive: true, force: true });
+  fs.rmSync(oldTarget, { recursive: true, force: true });
+  let movedExisting = false;
   try {
     fs.mkdirSync(newTarget, { recursive: true });
     for (const dir of ['bin', 'src', 'hooks']) {
@@ -96,9 +99,19 @@ function copyRuntimeFiles(sourceRoot, target, { localDev }) {
       path.join(sourceRoot, 'package.json'),
       path.join(newTarget, 'package.json')
     );
+    if (fileExists(target)) {
+      fs.renameSync(target, oldTarget);
+      movedExisting = true;
+    }
     fs.renameSync(newTarget, target);
+    fs.rmSync(oldTarget, { recursive: true, force: true });
   } catch (err) {
     fs.rmSync(newTarget, { recursive: true, force: true });
+    if (movedExisting && !fileExists(target) && fileExists(oldTarget)) {
+      try {
+        fs.renameSync(oldTarget, target);
+      } catch {}
+    }
     throw err;
   }
 }
