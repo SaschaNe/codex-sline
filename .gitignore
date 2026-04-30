@@ -6,4 +6,7 @@ coverage/
 .env
 .github/
 .memsearch/
-test/
+.planning/
+docs/
+PROJECT.md
+HANDOFF.md
