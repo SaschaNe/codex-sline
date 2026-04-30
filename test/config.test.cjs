@@ -59,3 +59,10 @@ test('CORE-04: ensureTuiStatusLine does not duplicate existing tui.status_line',
   const count = (result.match(/tui\.status_line\s*=/g) || []).length;
   assert.strictEqual(count, 1, 'tui.status_line must appear exactly once');
 });
+
+test('CORE-04: ensureTuiStatusLine does not duplicate status_line set via [tui] section notation', () => {
+  const sectionNotation = '[tui]\nstatus_line = ["model-with-reasoning", "context-used"]\n';
+  const result = ensureTuiStatusLine(sectionNotation);
+  const count = (result.match(/status_line\s*=/g) || []).length;
+  assert.strictEqual(count, 1, 'status_line must appear exactly once when set via [tui] section');
+});

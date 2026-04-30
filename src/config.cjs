@@ -18,7 +18,7 @@ function readSimpleConfig() {
     approvalPolicy: matchTomlString(text, /^approval_policy\s*=\s*"([^"]+)"/m),
     sandboxMode: matchTomlString(text, /^sandbox_mode\s*=\s*"([^"]+)"/m),
     codexHooks: /\[features\][\s\S]*?codex_hooks\s*=\s*true/.test(text),
-    tuiStatusLine: matchTomlArray(text, /^tui\.status_line\s*=\s*(\[[^\n]*\])/m)
+    tuiStatusLine: matchTuiStatusLine(text)
   };
 }
 
@@ -88,15 +88,29 @@ function ensureTuiStatusLine(text) {
   const desired = 'tui.status_line = ["model-with-reasoning", "context-remaining", "current-dir"]';
   const normalized = text.replace(/\r\n/g, '\n');
   const lines = normalized.split('\n');
+  let inTuiSection = false;
   const hasStatusLine = lines.some((l) => {
     const trimmed = l.trim();
-    return !trimmed.startsWith('#') && /^tui\.status_line\s*=/.test(trimmed);
+    if (trimmed.startsWith('#')) return false;
+    if (trimmed === '[tui]') { inTuiSection = true; return false; }
+    if (/^\[.+\]/.test(trimmed) && trimmed !== '[tui]') { inTuiSection = false; return false; }
+    if (/^tui\.status_line\s*=/.test(trimmed)) return true;
+    if (inTuiSection && /^status_line\s*=/.test(trimmed)) return true;
+    return false;
   });
   if (hasStatusLine) return normalized;
   const prefix = normalized.endsWith('\n') || normalized.length === 0
     ? normalized
     : `${normalized}\n`;
   return `${prefix}${desired}\n`;
+}
+
+function matchTuiStatusLine(text) {
+  const dotted = text.match(/^tui\.status_line\s*=\s*(\[[^\n]*\])/m);
+  if (dotted) return dotted[1];
+  const section = text.match(/\[tui\][\s\S]*?\nstatus_line\s*=\s*(\[[^\n]*\])/);
+  if (section) return section[1];
+  return '';
 }
 
 module.exports = {
