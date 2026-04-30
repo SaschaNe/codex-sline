@@ -1,0 +1,21 @@
+{
+  "name": "codex-statusline",
+  "version": "0.1.0",
+  "description": "Status companion for OpenAI Codex CLI using hooks, config inspection, and terminal-friendly rendering.",
+  "author": {
+    "name": "SaschaNe"
+  },
+  "homepage": "https://github.com/saschane/codex-statusline",
+  "repository": "https://github.com/saschane/codex-statusline",
+  "license": "MIT",
+  "keywords": ["codex", "statusline", "hooks", "terminal"],
+  "interface": {
+    "displayName": "Codex Statusline",
+    "shortDescription": "Render useful Codex session state in hooks, shell prompts, or tmux.",
+    "longDescription": "A Codex CLI status companion that installs through npx, merges Codex hooks safely, records lightweight session state, and renders model, reasoning effort, cwd, git, sandbox, approval, and approximate context information.",
+    "developerName": "SaschaNe",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/saschane/codex-statusline"
+  }
+}
