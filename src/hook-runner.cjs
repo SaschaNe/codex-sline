@@ -6,7 +6,7 @@ const { parseStdinJson, readStdinWithTimeout } = require('./util.cjs');
 
 async function runHook({ eventName }) {
   const input = parseStdinJson(await readStdinWithTimeout());
-  const state = updateStateFromHook(eventName || input.hook_event_name || 'unknown', input);
+  const state = await updateStateFromHook(eventName || input.hook_event_name || 'unknown', input);
 
   if (eventName === 'SessionStart') {
     const line = renderLine(state, { plain: false });

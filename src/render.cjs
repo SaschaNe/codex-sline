@@ -39,6 +39,11 @@ function renderLine(state, { plain = false } = {}) {
   const sandbox = cfg.sandboxMode || '';
   const approval = cfg.approvalPolicy || '';
   const policy = sandbox || approval ? `${sandbox || '?'}/${approval || '?'}` : null;
+  const usage = state.usage || null;
+  const fiveHour = typeof usage?.fiveHour?.usedPercent === 'number'
+    ? `5h ${usage.fiveHour.usedPercent}%` : null;
+  const weekly = typeof usage?.weekly?.usedPercent === 'number'
+    ? `weekly ${usage.weekly.usedPercent}%` : null;
   const session = state.sessionId
     ? `session ${state.sessionId.slice(0, 8)}`
     : null;
@@ -48,6 +53,8 @@ function renderLine(state, { plain = false } = {}) {
     color(dir, '2', plain),
     color(git, state.git?.dirty ? '33' : '32', plain),
     ctx ? color(ctx, '35', plain) : null,
+    fiveHour ? color(fiveHour, '33', plain) : null,
+    weekly ? color(weekly, '33', plain) : null,
     policy ? color(policy, '90', plain) : null,
     session ? color(session, '90', plain) : null
   ];

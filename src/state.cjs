@@ -5,6 +5,9 @@ const { statePath } = require('./paths.cjs');
 const { ensureDir, readJson, writeJsonAtomic } = require('./util.cjs');
 const { readSimpleConfig } = require('./config.cjs');
 const { gitInfo } = require('./git.cjs');
+const { fetchUsageLimits } = require('./usage.cjs');
+
+const USAGE_CACHE_TTL_MS = 60_000;
 
 function loadState() {
   return readJson(statePath(), {});
@@ -14,7 +17,7 @@ function saveState(state) {
   writeJsonAtomic(statePath(), state);
 }
 
-function updateStateFromHook(eventName, input) {
+async function updateStateFromHook(eventName, input) {
   const previous = loadState();
   const now = new Date().toISOString();
   const cwd = input.cwd || input.workspace?.current_dir || previous.cwd || process.cwd();
@@ -23,6 +26,11 @@ function updateStateFromHook(eventName, input) {
   const cfg = readSimpleConfig();
   const git = gitInfo(cwd);
   const context = contextEstimate(input, transcriptPath);
+
+  const usageAge = Date.now() - (previous.usageFetchedAt || 0);
+  const usage = usageAge < USAGE_CACHE_TTL_MS
+    ? (previous.usage || null)
+    : await fetchUsageLimits();
 
   const state = {
     ...previous,
@@ -37,6 +45,10 @@ function updateStateFromHook(eventName, input) {
     config: cfg,
     git,
     context,
+    usage,
+    usageFetchedAt: usageAge < USAGE_CACHE_TTL_MS
+      ? (previous.usageFetchedAt || 0)
+      : Date.now(),
     lastEvent: eventName,
     startedAt: previous.startedAt || now,
     updatedAt: now
