@@ -11,10 +11,10 @@ const upgradePath = require.resolve('../src/upgrade.cjs');
 const installPath = require.resolve('../src/install.cjs');
 
 function seedInstalledPackage(tmpDir, version) {
-  const iDir = path.join(tmpDir, 'codex-statusline');
+  const iDir = path.join(tmpDir, 'codex-sline');
   fs.mkdirSync(iDir, { recursive: true });
   fs.writeFileSync(path.join(iDir, 'package.json'), JSON.stringify({
-    name: 'codex-statusline',
+    name: 'codex-sline',
     version
   }));
   return iDir;
@@ -90,7 +90,7 @@ test('upgrade: prints up-to-date message when installed version matches registry
     try {
       await mocked.upgrade({ args: [] });
       assert.strictEqual(process.exitCode, undefined);
-      assert.ok(output.logs.some((l) => l.includes('codex-statusline is already up-to-date (1.2.3)')));
+      assert.ok(output.logs.some((l) => l.includes('codex-sline is already up-to-date (1.2.3)')));
     } finally {
       process.exitCode = prev;
       mocked.restore();
@@ -143,7 +143,7 @@ test('upgrade: replaces an existing non-empty install dir with real runtime file
       await mocked.upgrade({ args: [] });
       assert.strictEqual(process.exitCode, undefined);
       assert.strictEqual(fs.existsSync(path.join(iDir, 'stale.txt')), false);
-      assert.strictEqual(fs.existsSync(path.join(iDir, 'bin', 'codex-statusline.cjs')), true);
+      assert.strictEqual(fs.existsSync(path.join(iDir, 'bin', 'codex-sline.cjs')), true);
       assert.ok(output.logs.includes('Upgrade complete.'));
     } finally {
       process.exitCode = prev;

@@ -11,7 +11,7 @@ async function runHook({ eventName }) {
   if (eventName === 'SessionStart') {
     const line = renderLine(state, { plain: false });
     process.stdout.write(JSON.stringify({
-      systemMessage: `[codex-statusline] ${stripAnsi(line)}`
+      systemMessage: `[codex-sline] ${stripAnsi(line)}`
     }));
     return;
   }

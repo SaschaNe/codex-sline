@@ -8,7 +8,7 @@ const { fileExists, readJson } = require('./util.cjs');
 
 async function upgrade({ args = [] } = {}) {
   if (!fileExists(installDir())) {
-    console.error("Not installed — run 'npx codex-statusline install' first");
+    console.error("Not installed — run 'npx codex-sline install' first");
     process.exitCode = 1;
     return;
   }
@@ -18,7 +18,7 @@ async function upgrade({ args = [] } = {}) {
 
   let latestVersion;
   try {
-    latestVersion = execFileSync('npm', ['view', 'codex-statusline', 'version'], {
+    latestVersion = execFileSync('npm', ['view', 'codex-sline', 'version'], {
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'pipe'],
       timeout: 10000
@@ -30,7 +30,7 @@ async function upgrade({ args = [] } = {}) {
   }
 
   if (installedVersion === latestVersion) {
-    console.log(`codex-statusline is already up-to-date (${latestVersion})`);
+    console.log(`codex-sline is already up-to-date (${latestVersion})`);
     return;
   }
 

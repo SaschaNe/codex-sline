@@ -10,7 +10,7 @@ const { uninstall } = require('../src/uninstall.cjs');
 
 // --- De-todo'd Phase 1 tests (CORE-03, CORE-05, CORE-06) ---
 
-test('CORE-03: uninstall removes only entries with _codex_statusline: true marker', async () => {
+test('CORE-03: uninstall removes only entries with _codex_sline: true marker', async () => {
   await withTempCodexHome(async (tmpDir) => {
     const hooksFile = path.join(tmpDir, 'hooks.json');
     const hooksData = {
@@ -18,7 +18,7 @@ test('CORE-03: uninstall removes only entries with _codex_statusline: true marke
         PostToolUse: [
           {
             matcher: '',
-            hooks: [{ type: 'command', command: 'node /path/to/post-tool-use.cjs', _codex_statusline: true }]
+            hooks: [{ type: 'command', command: 'node /path/to/post-tool-use.cjs', _codex_sline: true }]
           },
           {
             matcher: '',
@@ -31,7 +31,7 @@ test('CORE-03: uninstall removes only entries with _codex_statusline: true marke
 
     const isManaged = (entry) => {
       const hooks = Array.isArray(entry.hooks) ? entry.hooks : [];
-      return hooks.some((h) => h['_codex_statusline'] === true);
+      return hooks.some((h) => h['_codex_sline'] === true);
     };
     const data = JSON.parse(fs.readFileSync(hooksFile, 'utf8'));
     data.hooks.PostToolUse = data.hooks.PostToolUse.filter((e) => !isManaged(e));
@@ -44,13 +44,13 @@ test('CORE-03: uninstall removes only entries with _codex_statusline: true marke
   });
 });
 
-test('CORE-03: addHook adds _codex_statusline: true structured marker to hook entries', () => {
+test('CORE-03: addHook adds _codex_sline: true structured marker to hook entries', () => {
   const mockHookEntry = {
     matcher: '',
-    hooks: [{ type: 'command', command: 'node /path/hook.cjs', timeout: 10, _codex_statusline: true }]
+    hooks: [{ type: 'command', command: 'node /path/hook.cjs', timeout: 10, _codex_sline: true }]
   };
-  assert.strictEqual(mockHookEntry.hooks[0]['_codex_statusline'], true, '_codex_statusline must be true');
-  assert.ok(!String(mockHookEntry.hooks[0].command).includes('# codex-statusline'), 'command must not use comment marker');
+  assert.strictEqual(mockHookEntry.hooks[0]['_codex_sline'], true, '_codex_sline must be true');
+  assert.ok(!String(mockHookEntry.hooks[0].command).includes('# codex-sline'), 'command must not use comment marker');
 });
 
 test('CORE-05: copyRuntimeFiles cleans up .new dir when copy fails', async () => {
@@ -123,7 +123,7 @@ test('TEST-01: install preserves existing third-party hooks in hooks.json', asyn
   });
 });
 
-test('TEST-01: uninstall removes only _codex_statusline-tagged hooks, preserves third-party entries', async () => {
+test('TEST-01: uninstall removes only _codex_sline-tagged hooks, preserves third-party entries', async () => {
   await withTempCodexHome(async (tmpDir) => {
     const hooksFile = path.join(tmpDir, 'hooks.json');
     fs.writeFileSync(hooksFile, JSON.stringify({
@@ -131,7 +131,7 @@ test('TEST-01: uninstall removes only _codex_statusline-tagged hooks, preserves 
         PostToolUse: [
           {
             matcher: '',
-            hooks: [{ type: 'command', command: 'node /managed.cjs', _codex_statusline: true }]
+            hooks: [{ type: 'command', command: 'node /managed.cjs', _codex_sline: true }]
           },
           {
             matcher: '',
@@ -144,7 +144,7 @@ test('TEST-01: uninstall removes only _codex_statusline-tagged hooks, preserves 
     const data = JSON.parse(fs.readFileSync(hooksFile, 'utf8'));
     const remaining = (data.hooks.PostToolUse || []).flatMap((e) => e.hooks || []);
     assert.ok(
-      !remaining.some((h) => h['_codex_statusline'] === true),
+      !remaining.some((h) => h['_codex_sline'] === true),
       'managed hooks must be removed after uninstall'
     );
     assert.ok(
@@ -162,7 +162,7 @@ test('TEST-01: installed hooks carry timeout: 10', async () => {
     const managedHooks = Object.values(data.hooks || {})
       .flat()
       .flatMap((e) => (Array.isArray(e.hooks) ? e.hooks : []))
-      .filter((h) => h['_codex_statusline'] === true);
+      .filter((h) => h['_codex_sline'] === true);
     assert.ok(managedHooks.length >= 4, 'must have at least 4 managed hook entries');
     assert.ok(
       managedHooks.every((h) => h.timeout === 10),

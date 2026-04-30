@@ -28,7 +28,7 @@ test('tmux-config: exits 1 with not-installed message when installDir does not e
 
 test('tmux-config: prints single-line set-option snippet when installed', async () => {
   await withTempCodexHome(async (tmpDir) => {
-    const iDir = path.join(tmpDir, 'codex-statusline');
+    const iDir = path.join(tmpDir, 'codex-sline');
     fs.mkdirSync(path.join(iDir, 'bin'), { recursive: true });
     const lines = [];
     const origLog = console.log;
@@ -38,7 +38,7 @@ test('tmux-config: prints single-line set-option snippet when installed', async 
       assert.strictEqual(lines.length, 1, 'exactly one line of output');
       assert.ok(lines[0].startsWith('set-option -g status-right'), 'output starts with set-option');
       assert.ok(lines[0].includes('render --plain'), 'output includes render --plain');
-      assert.ok(lines[0].includes(path.join(iDir, 'bin', 'codex-statusline.cjs')), 'output includes install path');
+      assert.ok(lines[0].includes(path.join(iDir, 'bin', 'codex-sline.cjs')), 'output includes install path');
     } finally {
       console.log = origLog;
     }

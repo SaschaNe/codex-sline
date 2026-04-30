@@ -1,5 +1,5 @@
 {
-  "name": "codex-statusline",
+  "name": "codex-sline",
   "version": "0.1.0",
   "description": "Status companion for OpenAI Codex CLI: hooks, renderer, installer, and project-aware session state.",
   "license": "MIT",
@@ -8,11 +8,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/saschane/codex-statusline.git"
+    "url": "git+https://github.com/SaschaNe/codex-sline.git"
   },
-  "homepage": "https://github.com/saschane/codex-statusline#readme",
+  "homepage": "https://github.com/SaschaNe/codex-sline#readme",
   "bugs": {
-    "url": "https://github.com/saschane/codex-statusline/issues"
+    "url": "https://github.com/SaschaNe/codex-sline/issues"
   },
   "keywords": [
     "codex",
@@ -24,7 +24,7 @@
     "tui"
   ],
   "bin": {
-    "codex-statusline": "bin/codex-statusline.cjs"
+    "codex-sline": "bin/codex-sline.cjs"
   },
   "files": [
     "bin/",
@@ -37,9 +37,9 @@
   "scripts": {
     "prepublishOnly": "npm test",
     "test": "node --test",
-    "doctor": "node bin/codex-statusline.cjs doctor",
-    "render": "node bin/codex-statusline.cjs render",
-    "install:local": "node bin/codex-statusline.cjs install --local-dev"
+    "doctor": "node bin/codex-sline.cjs doctor",
+    "render": "node bin/codex-sline.cjs render",
+    "install:local": "node bin/codex-sline.cjs install --local-dev"
   },
   "engines": {
     "node": ">=18"

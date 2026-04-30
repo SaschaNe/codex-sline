@@ -58,17 +58,17 @@ function checkHooks() {
     .flat()
     .flatMap((entry) => (Array.isArray(entry.hooks) ? entry.hooks : []));
 
-  const hasNewFormat = allHooks.some((h) => h['_codex_statusline'] === true);
+  const hasNewFormat = allHooks.some((h) => h['_codex_sline'] === true);
   const hasOldFormat = allHooks.some(
-    (h) => String(h.command || '').includes('codex-statusline') && !h['_codex_statusline']
+    (h) => String(h.command || '').includes('codex-sline') && !h['_codex_sline']
   );
 
   if (hasOldFormat) {
-    console.log('WARN codex-statusline hooks: Found old-format hooks — re-run install to migrate');
+    console.log('WARN codex-sline hooks: Found old-format hooks — re-run install to migrate');
   }
 
   return {
-    name: 'codex-statusline hooks',
+    name: 'codex-sline hooks',
     ok: hasNewFormat,
     detail: hasNewFormat ? hooksPath() : 'not installed'
   };

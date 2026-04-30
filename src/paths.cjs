@@ -12,7 +12,7 @@ function codexHome() {
 }
 
 function installDir() {
-  return path.join(codexHome(), 'codex-statusline');
+  return path.join(codexHome(), 'codex-sline');
 }
 
 function statePath() {

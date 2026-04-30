@@ -47,7 +47,7 @@ async function install({ args = [] } = {}) {
     const allEntries = Object.values(hooksData.hooks || {}).flat();
     const preservedEntries = allEntries.filter((e) => {
       const hs = Array.isArray(e.hooks) ? e.hooks : [];
-      return !hs.some((h) => h['_codex_statusline'] === true);
+      return !hs.some((h) => h['_codex_sline'] === true);
     });
 
     console.log('DRY RUN — no files will be written\n');
@@ -72,12 +72,12 @@ async function install({ args = [] } = {}) {
   updateConfig();
   updateHooks();
 
-  console.log('Installed codex-statusline');
+  console.log('Installed codex-sline');
   console.log(`Install dir: ${target}`);
   console.log(`Hooks file:  ${hooksFile}`);
   console.log(`Config file: ${cfgFile}`);
   console.log('');
-  console.log('Next: restart Codex and run `npx codex-statusline@latest doctor`.');
+  console.log('Next: restart Codex and run `npx codex-sline@latest doctor`.');
 }
 
 function copyRuntimeFiles(sourceRoot, target, { localDev }) {
@@ -145,7 +145,7 @@ function addHook(data, eventName, matcher, script) {
   const existing = data.hooks[eventName] || [];
   const filtered = existing.filter((entry) => {
     const hooks = Array.isArray(entry.hooks) ? entry.hooks : [];
-    return !hooks.some((h) => h['_codex_statusline'] === true);
+    return !hooks.some((h) => h['_codex_sline'] === true);
   });
 
   filtered.push({
@@ -155,7 +155,7 @@ function addHook(data, eventName, matcher, script) {
         type: 'command',
         command,
         timeout: HOOK_TIMEOUT_S,
-        _codex_statusline: true
+        _codex_sline: true
       }
     ]
   });

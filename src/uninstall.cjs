@@ -13,7 +13,7 @@ async function uninstall({ args = [] } = {}) {
     const data = readJson(file, { hooks: {} });
     const isManaged = (entry) => {
       const hooks = Array.isArray(entry.hooks) ? entry.hooks : [];
-      return hooks.some((h) => h['_codex_statusline'] === true);
+      return hooks.some((h) => h['_codex_sline'] === true);
     };
     for (const eventName of Object.keys(data.hooks || {})) {
       data.hooks[eventName] = (data.hooks[eventName] || []).filter((entry) => !isManaged(entry));
@@ -22,7 +22,7 @@ async function uninstall({ args = [] } = {}) {
     fs.rmSync(installDir(), { recursive: true, force: true });
   }
 
-  console.log(`${dryRun ? 'Would uninstall' : 'Uninstalled'} codex-statusline`);
+  console.log(`${dryRun ? 'Would uninstall' : 'Uninstalled'} codex-sline`);
 }
 
 module.exports = { uninstall };

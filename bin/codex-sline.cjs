@@ -65,16 +65,16 @@ async function main() {
 }
 
 function printHelp() {
-  console.log(`codex-statusline
+  console.log(`codex-sline
 
 Usage:
-  codex-statusline install [--dry-run] [--local-dev]
-  codex-statusline upgrade
-  codex-statusline tmux-config
-  codex-statusline doctor
-  codex-statusline render [--json] [--plain]
-  codex-statusline uninstall [--dry-run]
-  codex-statusline hook <SessionStart|UserPromptSubmit|PostToolUse|Stop>
+  codex-sline install [--dry-run] [--local-dev]
+  codex-sline upgrade
+  codex-sline tmux-config
+  codex-sline doctor
+  codex-sline render [--json] [--plain]
+  codex-sline uninstall [--dry-run]
+  codex-sline hook <SessionStart|UserPromptSubmit|PostToolUse|Stop>
 
 Goal:
   Provide a Codex CLI status companion that can be installed through npx,

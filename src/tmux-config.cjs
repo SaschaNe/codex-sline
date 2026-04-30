@@ -6,11 +6,11 @@ const { fileExists } = require('./util.cjs');
 
 async function tmuxConfig({ args = [] } = {}) {
   if (!fileExists(installDir())) {
-    console.error("Not installed — run 'npx codex-statusline install' first");
+    console.error("Not installed — run 'npx codex-sline install' first");
     process.exitCode = 1;
     return;
   }
-  const renderCmd = path.join(installDir(), 'bin', 'codex-statusline.cjs');
+  const renderCmd = path.join(installDir(), 'bin', 'codex-sline.cjs');
   console.log(`set-option -g status-right "#(node '${renderCmd}' render --plain)"`);
 }
 
