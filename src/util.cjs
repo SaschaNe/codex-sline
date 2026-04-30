@@ -94,6 +94,7 @@ function readStdinWithTimeout(ms = 1500) {
 
 function parseStdinJson(input) {
   if (!input || !input.trim()) return {};
+  if (input.length > 1_000_000) return {};
   try {
     return JSON.parse(input);
   } catch {
