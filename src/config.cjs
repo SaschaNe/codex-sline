@@ -85,7 +85,7 @@ function ensureCodexHooksEnabled(text) {
 }
 
 function ensureTuiStatusLine(text) {
-  const desired = 'tui.status_line = ["model-with-reasoning", "context-remaining", "current-dir"]';
+  const desired = 'tui.status_line = ["model-with-reasoning", "context-used", "context-remaining", "five-hour-limit", "weekly-limit", "current-dir"]';
   const normalized = text.replace(/\r\n/g, '\n');
   const lines = normalized.split('\n');
   let inTuiSection = false;
