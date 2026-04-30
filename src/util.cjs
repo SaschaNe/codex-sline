@@ -76,19 +76,25 @@ function backupFile(file) {
 function readStdinWithTimeout(ms = 1500) {
   return new Promise((resolve) => {
     let input = '';
-    const timer = setTimeout(() => resolve(input), ms);
+
+    function cleanup() {
+      clearTimeout(timer);
+      process.stdin.off('data', onData);
+      process.stdin.off('end', onEnd);
+      process.stdin.off('error', onError);
+    }
+
+    function onData(chunk) { input += chunk; }
+    function onEnd()  { cleanup(); resolve(input); }
+    function onError() { cleanup(); resolve(input); }
+
     process.stdin.setEncoding('utf8');
-    process.stdin.on('data', (chunk) => {
-      input += chunk;
-    });
-    process.stdin.on('end', () => {
-      clearTimeout(timer);
-      resolve(input);
-    });
-    process.stdin.on('error', () => {
-      clearTimeout(timer);
-      resolve(input);
-    });
+    process.stdin.on('data', onData);
+    process.stdin.on('end', onEnd);
+    process.stdin.on('error', onError);
+
+    const timer = setTimeout(() => { cleanup(); resolve(input); }, ms);
+    timer.unref(); // do not keep the event loop alive for the timer alone
   });
 }
 
